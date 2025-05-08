@@ -129,4 +129,5 @@ npm install
 npm install vue-router@4 vuex@4 axios
 npm install -g nodemon
 npm install --save-dev nodemon
+npm install --save-dev concurrently para levantar los dos servicios en paralelo
 

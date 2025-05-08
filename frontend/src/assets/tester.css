@@ -4,25 +4,36 @@ body {
   background: url('../assets/fondorestaurante1.png') no-repeat center center fixed;
   background-size: cover;
   color: #f4f4f4;
+  height: 100vh;
 }
 
+/* Contenedor centrado */
+.zoom-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Caja principal con escala fija */
 .api-tester {
   max-width: 750px;
-  margin: 30px auto;
   padding: 24px;
   border-radius: 16px;
   background: rgba(25, 25, 35, 0.85);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-  background: rgba(25, 25, 35, 0.85);
-
+  transform: scale(0.7);
+  transform-origin: center center;
 }
 
+/* Título */
 .api-tester h1 {
   text-align: center;
   margin-bottom: 22px;
   color: #f4e1c1;
 }
 
+/* Formularios */
 .form-group {
   margin-bottom: 16px;
 }
@@ -50,6 +61,7 @@ body {
   color: #aaa;
 }
 
+/* Botones */
 button {
   width: 100%;
   padding: 12px;
@@ -61,27 +73,11 @@ button {
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s;
+  margin-top: 10px;
 }
 
 button:hover {
   background: #7e4c3f;
-}
-
-.respuesta {
-  margin-top: 25px;
-}
-
-.respuesta h2 {
-  color: #f4e1c1;
-}
-
-.respuesta pre {
-  background: rgba(0, 0, 0, 0.7);
-  color: #e0e0e0;
-  padding: 16px;
-  border-radius: 10px;
-  overflow-x: auto;
-  max-height: 400px;
 }
 
 .cerrar-sesion-btn {
@@ -98,4 +94,76 @@ button:hover {
 
 .cerrar-sesion-btn:hover {
   background-color: #d9363e;
+}
+
+/* Respuesta */
+.respuesta {
+  margin-top: 30px;
+}
+
+.respuesta h2 {
+  color: #f4e1c1;
+  margin-bottom: 16px;
+}
+
+/* Tabla */
+.respuesta table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.respuesta th,
+.respuesta td {
+  border: 1px solid #555;
+  padding: 10px;
+  text-align: left;
+  color: #f4f4f4;
+}
+
+.respuesta th {
+  background-color: #3d3d4f;
+  color: #f4e1c1;
+}
+
+.respuesta tr:nth-child(even) {
+  background-color: #2c2c3a;
+}
+
+.respuesta tr:nth-child(odd) {
+  background-color: #24242f;
+}
+
+/* Lista */
+.respuesta ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.respuesta li {
+  padding: 8px 0;
+  border-bottom: 1px solid #444;
+  color: #f4f4f4;
+}
+
+.respuesta li strong {
+  color: #f4e1c1;
+}
+
+/* Texto suelto */
+.respuesta p {
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  color: #e0e0e0;
+}
+
+/* Preformato */
+.respuesta pre {
+  background: rgba(0, 0, 0, 0.7);
+  color: #e0e0e0;
+  padding: 16px;
+  border-radius: 10px;
+  overflow-x: auto;
+  max-height: 400px;
 }

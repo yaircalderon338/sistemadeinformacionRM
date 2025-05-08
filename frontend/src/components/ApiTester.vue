@@ -52,15 +52,50 @@
       </div>
     </div>
 
-    <!-- Botón de enviar -->
     <button @click="realizarAccion">Enviar</button>
-
-    <!-- Botón de cerrar sesión debajo -->
     <button class="cerrar-sesion-btn" @click="cerrarSesion">Cerrar Sesión</button>
 
-    <div class="respuesta">
+    <!-- Botón toggle -->
+    <button class="toggle-respuesta-btn" @click="toggleRespuesta">
+      {{ mostrarRespuesta ? 'Ocultar' : 'Mostrar' }} Respuesta
+    </button>
+
+    <!-- Panel de respuesta -->
+    <div v-if="mostrarRespuesta" class="respuesta">
       <h2>Respuesta:</h2>
-      <pre>{{ respuesta }}</pre>
+
+      <div v-if="Array.isArray(respuesta)">
+        <table>
+          <thead>
+            <tr>
+              <th v-for="(valor, key) in respuesta[0]" :key="key">{{ key }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in respuestaPaginada" :key="index">
+              <td v-for="(valor, key) in item" :key="key">{{ valor }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="paginacion" v-if="totalPaginas > 1">
+          <button @click="paginaAnterior" :disabled="paginaActual === 1">← Anterior</button>
+          <span>Página {{ paginaActual }} de {{ totalPaginas }}</span>
+          <button @click="paginaSiguiente" :disabled="paginaActual === totalPaginas">Siguiente →</button>
+        </div>
+      </div>
+
+      <div v-else-if="typeof respuesta === 'object' && respuesta !== null">
+        <ul>
+          <li v-for="(valor, key) in respuesta" :key="key">
+            <strong>{{ key }}:</strong> {{ valor }}
+          </li>
+        </ul>
+      </div>
+
+      <div v-else>
+        <p>{{ respuesta }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -79,6 +114,12 @@ const id = ref('')
 const respuesta = ref('')
 
 const formData = ref({})
+
+const mostrarRespuesta = ref(true)
+
+const toggleRespuesta = () => {
+  mostrarRespuesta.value = !mostrarRespuesta.value
+}
 
 const camposPorTabla = {
   admin: [
@@ -125,6 +166,7 @@ const camposFormulario = computed(() => {
 
 const resetForm = () => {
   formData.value = {}
+  paginaActual.value = 1
 }
 
 const realizarAccion = async () => {
@@ -172,7 +214,8 @@ const realizarAccion = async () => {
 
     const res = await fetch(url, options)
     const data = await res.json()
-    respuesta.value = JSON.stringify(data, null, 2)
+    respuesta.value = data
+    paginaActual.value = 1
 
   } catch (err) {
     respuesta.value = `Error: ${err.message}`
@@ -182,5 +225,33 @@ const realizarAccion = async () => {
 const cerrarSesion = () => {
   router.push('/login')
 }
-</script>
 
+// Paginación
+const paginaActual = ref(1)
+const itemsPorPagina = 5
+
+const respuestaPaginada = computed(() => {
+  if (Array.isArray(respuesta.value)) {
+    const inicio = (paginaActual.value - 1) * itemsPorPagina
+    const fin = inicio + itemsPorPagina
+    return respuesta.value.slice(inicio, fin)
+  }
+  return []
+})
+
+const totalPaginas = computed(() => {
+  return Array.isArray(respuesta.value) ? Math.ceil(respuesta.value.length / itemsPorPagina) : 1
+})
+
+const paginaSiguiente = () => {
+  if (paginaActual.value < totalPaginas.value) {
+    paginaActual.value++
+  }
+}
+
+const paginaAnterior = () => {
+  if (paginaActual.value > 1) {
+    paginaActual.value--
+  }
+}
+</script>
