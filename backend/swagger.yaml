@@ -1,0 +1,482 @@
+openapi: 3.0.3
+info:
+  title: API del Restaurante
+  version: "1.0.0"
+  
+
+servers:
+  - url: "http://localhost:3000"
+
+paths:
+
+  /admin:
+    get:
+      summary: Listar administradores
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Crear administrador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: Creado
+
+  /admin/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Obtener administrador por ID
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Actualizar administrador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Actualizado
+    delete:
+      summary: Eliminar administrador
+      responses:
+        '200':
+          description: Eliminado
+
+  /staff:
+    get:
+      summary: Listar empleados
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Crear empleado
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                status:
+                  type: string
+                role:
+                  type: string
+      responses:
+        '201':
+          description: Creado
+
+  /staff/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Obtener empleado
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Actualizar empleado
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                status:
+                  type: string
+                role:
+                  type: string
+      responses:
+        '200':
+          description: Actualizado
+    delete:
+      summary: Eliminar empleado
+      responses:
+        '200':
+          description: Eliminado
+
+  /menu:
+    get:
+      summary: Listar menús
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Crear menú
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                menuname:
+                  type: string
+      responses:
+        '201':
+          description: Creado
+
+  /menu/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Obtener menú
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Actualizar menú
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                menuname:
+                  type: string
+      responses:
+        '200':
+          description: Actualizado
+    delete:
+      summary: Eliminar menú
+      responses:
+        '200':
+          description: Eliminado
+
+  /menuitem:
+    get:
+      summary: Listar ítems de menú
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Crear ítem de menú
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                menuid:
+                  type: integer
+                itemname:
+                  type: string
+                price:
+                  type: number
+      responses:
+        '201':
+          description: Creado
+
+  /menuitem/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Obtener ítem de menú
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Actualizar ítem de menú
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                menuid:
+                  type: integer
+                itemname:
+                  type: string
+                price:
+                  type: number
+      responses:
+        '200':
+          description: Actualizado
+    delete:
+      summary: Eliminar ítem de menú
+      responses:
+        '200':
+          description: Eliminado
+
+  /order:
+    get:
+      summary: Listar órdenes
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Crear orden
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                staffid:
+                  type: integer
+                date:
+                  type: string
+                  format: date
+      responses:
+        '201':
+          description: Creado
+
+  /order/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Obtener orden
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Actualizar orden
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                staffid:
+                  type: integer
+                date:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: Actualizado
+    delete:
+      summary: Eliminar orden
+      responses:
+        '200':
+          description: Eliminado
+
+  /orderdetail:
+    get:
+      summary: Listar detalles de orden
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Crear detalle de orden
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderid:
+                  type: integer
+                menuid:
+                  type: integer
+                itemid:
+                  type: integer
+                quantity:
+                  type: integer
+      responses:
+        '201':
+          description: Creado
+
+  /orderdetail/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Obtener detalle de orden
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Actualizar detalle de orden
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderid:
+                  type: integer
+                menuid:
+                  type: integer
+                itemid:
+                  type: integer
+                quantity:
+                  type: integer
+      responses:
+        '200':
+          description: Actualizado
+    delete:
+      summary: Eliminar detalle de orden
+      responses:
+        '200':
+          description: Eliminado
+
+  /reports:
+    get:
+      summary: Listar reportes
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Crear reporte
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                staffid:
+                  type: integer
+                date:
+                  type: string
+                  format: date
+      responses:
+        '201':
+          description: Creado
+
+  /reports/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Obtener reporte
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Actualizar reporte
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                staffid:
+                  type: integer
+                date:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: Actualizado
+    delete:
+      summary: Eliminar reporte
+      responses:
+        '200':
+          description: Eliminado
+
+  /role:
+    get:
+      summary: Listar roles
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Crear rol
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rolename:
+                  type: string
+      responses:
+        '201':
+          description: Creado
+
+  /role/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Obtener rol
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Actualizar rol
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rolename:
+                  type: string
+      responses:
+        '200':
+          description: Actualizado
+    delete:
+      summary: Eliminar rol
+      responses:
+        '200':
+          description: Eliminado
