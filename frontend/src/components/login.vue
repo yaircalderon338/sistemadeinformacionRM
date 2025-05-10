@@ -1,6 +1,6 @@
 <template>
     <div class="login-container">
-      <h1>Login</h1>
+      <h1>SISTEMA DE INFORMACION</h1>
       <div class="form-group">
         <label>Usuario:</label>
         <input v-model="username" type="text" placeholder="admin" />
