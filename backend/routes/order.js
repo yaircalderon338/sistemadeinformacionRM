@@ -6,7 +6,22 @@ const client = require('../db');
  * @swagger
  * /order:
  *   get:
- *     summary: Obtener todas las órdenes
+ *     summary: Obtener todas las órdenes con filtro por fecha
+ *     parameters:
+ *       - name: desde
+ *         in: query
+ *         description: Fecha de inicio del rango (formato: YYYY-MM-DD)
+ *         required: false
+ *         schema:
+ *           type: string
+ *           format: date
+ *       - name: hasta
+ *         in: query
+ *         description: Fecha de fin del rango (formato: YYYY-MM-DD)
+ *         required: false
+ *         schema:
+ *           type: string
+ *           format: date
  *     responses:
  *       200:
  *         description: Lista de órdenes
@@ -14,8 +29,17 @@ const client = require('../db');
  *         description: Error del servidor
  */
 router.get('/', async (req, res) => {
+  const { desde, hasta } = req.query;
+  let query = 'SELECT * FROM tbl_order';
+  let values = [];
+
+  if (desde && hasta) {
+    query += ' WHERE order_date BETWEEN $1 AND $2';
+    values = [desde, hasta];
+  }
+
   try {
-    const result = await client.query('SELECT * FROM tbl_order');
+    const result = await client.query(query, values);
     res.json(result.rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -166,6 +190,31 @@ router.delete('/:orderID', async (req, res) => {
       return res.status(404).json({ error: 'Orden no encontrada para eliminar' });
     }
     res.status(200).json({ message: 'Orden eliminada correctamente', deletedOrder: result.rows[0] });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/**
+ * @swagger
+ * /order/fechas/rango:
+ *   get:
+ *     summary: Obtener primera y última fecha de las órdenes
+ *     responses:
+ *       200:
+ *         description: Fechas obtenidas exitosamente
+ *       500:
+ *         description: Error del servidor
+ */
+router.get('/fechas/rango', async (req, res) => {
+  try {
+    const result = await client.query(
+      `SELECT 
+        MIN(order_date) AS primera_fecha, 
+        MAX(order_date) AS ultima_fecha 
+       FROM tbl_order`
+    );
+    res.json(result.rows[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -61,7 +61,7 @@ body {
   color: #aaa;
 }
 
-/* Botones */
+/* Botones generales */
 button {
   width: 100%;
   padding: 12px;
@@ -80,6 +80,7 @@ button:hover {
   background: #7e4c3f;
 }
 
+/* Botón cerrar sesión */
 .cerrar-sesion-btn {
   background-color: #ff4d4f;
   color: white;
@@ -94,6 +95,23 @@ button:hover {
 
 .cerrar-sesion-btn:hover {
   background-color: #d9363e;
+}
+
+/* Botón toggle respuesta */
+.toggle-respuesta-btn {
+  background-color: #5e9ca4;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 15px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-respuesta-btn:hover {
+  background-color: #467c82;
 }
 
 /* Respuesta */
@@ -166,4 +184,33 @@ button:hover {
   border-radius: 10px;
   overflow-x: auto;
   max-height: 400px;
+}
+
+/* Paginación */
+.paginacion {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.paginacion button {
+  padding: 10px 20px;
+  background-color: #a46c5e;
+  border: none;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 14px;
+}
+
+.paginacion button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+.paginacion span {
+  font-size: 14px;
+  color: #f4e1c1;
 }

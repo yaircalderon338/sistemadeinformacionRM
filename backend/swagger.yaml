@@ -248,6 +248,21 @@ paths:
   /order:
     get:
       summary: Listar órdenes
+      parameters:
+        - in: query
+          name: start_date
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Fecha de inicio para filtrar las órdenes
+        - in: query
+          name: end_date
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Fecha de fin para filtrar las órdenes
       responses:
         '200':
           description: OK
@@ -372,6 +387,21 @@ paths:
   /reports:
     get:
       summary: Listar reportes
+      parameters:
+        - in: query
+          name: start_date
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Fecha de inicio para filtrar los reportes
+        - in: query
+          name: end_date
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Fecha de fin para filtrar los reportes
       responses:
         '200':
           description: OK

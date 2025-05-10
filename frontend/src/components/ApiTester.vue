@@ -4,7 +4,7 @@
 
     <div class="form-group">
       <label>Acción:</label>
-      <select v-model="accion">
+      <select v-model="accion" @change="resetForm">
         <option value="visualizar">Visualizar</option>
         <option value="eliminar">Eliminar</option>
         <option value="modificar">Modificar</option>
@@ -55,17 +55,15 @@
     <button @click="realizarAccion">Enviar</button>
     <button class="cerrar-sesion-btn" @click="cerrarSesion">Cerrar Sesión</button>
 
-    <!-- Botón toggle -->
     <button class="toggle-respuesta-btn" @click="toggleRespuesta">
       {{ mostrarRespuesta ? 'Ocultar' : 'Mostrar' }} Respuesta
     </button>
 
-    <!-- Panel de respuesta -->
     <div v-if="mostrarRespuesta" class="respuesta">
       <h2>Respuesta:</h2>
 
       <div v-if="Array.isArray(respuesta)">
-        <table>
+        <table v-if="respuesta.length > 0">
           <thead>
             <tr>
               <th v-for="(valor, key) in respuesta[0]" :key="key">{{ key }}</th>
@@ -77,6 +75,7 @@
             </tr>
           </tbody>
         </table>
+        <p v-else>No se encontraron registros.</p>
 
         <div class="paginacion" v-if="totalPaginas > 1">
           <button @click="paginaAnterior" :disabled="paginaActual === 1">← Anterior</button>
@@ -114,7 +113,6 @@ const id = ref('')
 const respuesta = ref('')
 
 const formData = ref({})
-
 const mostrarRespuesta = ref(true)
 
 const toggleRespuesta = () => {
@@ -166,7 +164,9 @@ const camposFormulario = computed(() => {
 
 const resetForm = () => {
   formData.value = {}
+  id.value = ''
   paginaActual.value = 1
+  respuesta.value = ''
 }
 
 const realizarAccion = async () => {
@@ -213,6 +213,7 @@ const realizarAccion = async () => {
     }
 
     const res = await fetch(url, options)
+    if (!res.ok) throw new Error(`Error ${res.status}`)
     const data = await res.json()
     respuesta.value = data
     paginaActual.value = 1
@@ -226,7 +227,6 @@ const cerrarSesion = () => {
   router.push('/login')
 }
 
-// Paginación
 const paginaActual = ref(1)
 const itemsPorPagina = 5
 
@@ -240,18 +240,16 @@ const respuestaPaginada = computed(() => {
 })
 
 const totalPaginas = computed(() => {
-  return Array.isArray(respuesta.value) ? Math.ceil(respuesta.value.length / itemsPorPagina) : 1
+  return Array.isArray(respuesta.value)
+    ? Math.ceil(respuesta.value.length / itemsPorPagina)
+    : 1
 })
 
 const paginaSiguiente = () => {
-  if (paginaActual.value < totalPaginas.value) {
-    paginaActual.value++
-  }
+  if (paginaActual.value < totalPaginas.value) paginaActual.value++
 }
 
 const paginaAnterior = () => {
-  if (paginaActual.value > 1) {
-    paginaActual.value--
-  }
+  if (paginaActual.value > 1) paginaActual.value--
 }
 </script>

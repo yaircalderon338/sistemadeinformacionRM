@@ -6,7 +6,22 @@ const client = require('../db');
  * @swagger
  * /report:
  *   get:
- *     summary: Obtener todos los reportes
+ *     summary: Obtener todos los reportes con filtro por fecha
+ *     parameters:
+ *       - name: desde
+ *         in: query
+ *         description: Fecha de inicio del rango (formato: YYYY-MM-DD)
+ *         required: false
+ *         schema:
+ *           type: string
+ *           format: date
+ *       - name: hasta
+ *         in: query
+ *         description: Fecha de fin del rango (formato: YYYY-MM-DD)
+ *         required: false
+ *         schema:
+ *           type: string
+ *           format: date
  *     responses:
  *       200:
  *         description: Lista de reportes
@@ -14,8 +29,17 @@ const client = require('../db');
  *         description: Error del servidor
  */
 router.get('/', async (req, res) => {
+  const { desde, hasta } = req.query;
+  let query = 'SELECT * FROM tbl_reports';
+  let values = [];
+
+  if (desde && hasta) {
+    query += ' WHERE report_date BETWEEN $1 AND $2';
+    values = [desde, hasta];
+  }
+
   try {
-    const result = await client.query('SELECT * FROM tbl_reports');
+    const result = await client.query(query, values);
     res.json(result.rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -86,6 +110,31 @@ router.post('/', async (req, res) => {
       [report_date, report_data, adminid]
     );
     res.status(201).json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/**
+ * @swagger
+ * /report/fechas/rango:
+ *   get:
+ *     summary: Obtener primera y última fecha de los reportes
+ *     responses:
+ *       200:
+ *         description: Fechas obtenidas exitosamente
+ *       500:
+ *         description: Error del servidor
+ */
+router.get('/fechas/rango', async (req, res) => {
+  try {
+    const result = await client.query(
+      `SELECT 
+        MIN(report_date) AS primera_fecha, 
+        MAX(report_date) AS ultima_fecha 
+       FROM tbl_reports`
+    );
+    res.json(result.rows[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
