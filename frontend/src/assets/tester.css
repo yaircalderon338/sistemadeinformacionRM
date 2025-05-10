@@ -17,14 +17,15 @@ body {
 
 /* Caja principal con escala fija */
 .api-tester {
-  max-width: 750px;
+  max-width: 1000px; /* Aumenté el valor de max-width */
   padding: 24px;
   border-radius: 16px;
   background: rgba(25, 25, 35, 0.85);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-  transform: scale(0.7);
+  transform: scale(0.75);
   transform-origin: center center;
 }
+
 
 /* Título */
 .api-tester h1 {

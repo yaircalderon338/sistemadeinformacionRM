@@ -5,6 +5,7 @@
     <div class="form-group">
       <label>Acción:</label>
       <select v-model="accion" @change="resetForm">
+        <option value="seleccionar">seleccionar</option>
         <option value="visualizar">Visualizar</option>
         <option value="eliminar">Eliminar</option>
         <option value="modificar">Modificar</option>
@@ -15,6 +16,7 @@
     <div class="form-group">
       <label>Tabla:</label>
       <select v-model="tabla" @change="resetForm">
+        <option value="seleccionar">seleccionar</option>
         <option value="admin">Admin</option>
         <option value="menu">Menu</option>
         <option value="menuitem">MenuItem</option>
@@ -29,6 +31,7 @@
     <div class="form-group" v-if="accion !== 'agregar'">
       <label>Consulta por:</label>
       <select v-model="modoConsulta">
+        <option value="seleccionar">seleccionar</option>
         <option value="todos">Todos</option>
         <option value="id">Por ID</option>
       </select>
