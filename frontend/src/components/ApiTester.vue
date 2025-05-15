@@ -286,7 +286,8 @@ const aplicarEscaladoInverso = () => {
   const escala = 0.85 / zoom
 
   apiTester.style.transformOrigin = 'center center'
-  apiTester.style.transform = `scale(${escala})`
+  apiTester.style.transform = `scale(${0.64})`
+  document.body.style.overflow = 'hidden';
 }
 
 const manejarEventosZoom = () => {

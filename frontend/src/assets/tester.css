@@ -5,9 +5,9 @@
   --secondary-hover: #467c82;
   --danger-color: #ff4d4f;
   --danger-hover: #d9363e;
-  --background-dark: rgba(0, 0, 0, 0.85); /* Fondo negro opaco */
-  --input-bg: #1a1a1a; /* Fondo input más oscuro */
-  --input-border: #333; /* Borde input más visible */
+  --background-dark: rgba(0, 0, 0, 0.85);
+  --input-bg: #1a1a1a;
+  --input-border: #333;
   --text-light: #f4e1c1;
   --text-default: #f4f4f4;
   --shadow-color: rgba(0, 0, 0, 0.7);
@@ -30,7 +30,6 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  height: 100%;
   overflow-x: hidden;
 }
 
@@ -52,7 +51,6 @@ body {
   width: 250px;
   max-width: 90vw;
   padding: 15px;
-  box-sizing: border-box;
   transition: transform 0.4s ease, box-shadow 0.4s ease;
   transform: scale(1);
   transform-origin: center;
@@ -64,7 +62,7 @@ body {
 }
 
 .zoom-container:hover {
-  transform: scale(0.75);
+  transform: scale(0.60);
   box-shadow: 0 0 35px var(--primary-color);
 }
 
@@ -118,7 +116,9 @@ textarea {
   font-size: 16px;
   font-weight: 500;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    inset 0 2px 5px rgba(255, 255, 255, 0.05),
+    inset 0 -2px 5px rgba(0, 0, 0, 0.8);
 }
 
 input::placeholder,
@@ -138,7 +138,6 @@ textarea:focus {
     inset 0 -2px 5px rgba(0, 0, 0, 0.7);
   background: #222;
   color: #fff;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 button {
