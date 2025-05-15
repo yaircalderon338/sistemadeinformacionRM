@@ -1,6 +1,6 @@
 <template>
   <div class="api-tester">
-    <h1>Sistema de Información Restaurante</h1>
+    <h1>Sistema de Información Arte culinario</h1>
 
     <div class="form-group">
       <label>Acción:</label>
@@ -48,23 +48,24 @@
         <label>ID:</label>
         <input v-model="formData.id" placeholder="ID a modificar" />
       </div>
-
       <div v-for="(campo, key) in camposFormulario" :key="key" class="form-group">
         <label>{{ campo.label }}:</label>
-        <input v-model="formData[campo.nombre]" :placeholder="campo.placeholder" />
+        <input
+          v-model="formData[campo.nombre]"
+          :placeholder="campo.placeholder"
+          :type="campo.nombre.includes('date') ? 'date' : 'text'"
+        />
       </div>
     </div>
 
     <button @click="realizarAccion">Enviar</button>
     <button class="cerrar-sesion-btn" @click="cerrarSesion">Cerrar Sesión</button>
-
     <button class="toggle-respuesta-btn" @click="toggleRespuesta">
       {{ mostrarRespuesta ? 'Ocultar' : 'Mostrar' }} Respuesta
     </button>
 
     <div v-if="mostrarRespuesta" class="respuesta">
       <h2>Respuesta:</h2>
-
       <div v-if="Array.isArray(respuesta)">
         <table v-if="respuesta.length > 0">
           <thead>
@@ -86,7 +87,6 @@
           <button @click="paginaSiguiente" :disabled="paginaActual === totalPaginas">Siguiente →</button>
         </div>
       </div>
-
       <div v-else-if="typeof respuesta === 'object' && respuesta !== null">
         <ul>
           <li v-for="(valor, key) in respuesta" :key="key">
@@ -94,7 +94,6 @@
           </li>
         </ul>
       </div>
-
       <div v-else>
         <p>{{ respuesta }}</p>
       </div>
@@ -108,24 +107,21 @@ import { useRouter } from 'vue-router'
 import '../assets/tester.css'
 
 const router = useRouter()
-
 const accion = ref('visualizar')
 const tabla = ref('admin')
 const modoConsulta = ref('todos')
 const id = ref('')
 const respuesta = ref('')
-
 const formData = ref({})
 const mostrarRespuesta = ref(true)
-
-const toggleRespuesta = () => {
-  mostrarRespuesta.value = !mostrarRespuesta.value
-}
+const paginaActual = ref(1)
+const itemsPorPagina = 5
 
 const camposPorTabla = {
   admin: [
     { nombre: 'username', label: 'Usuario', placeholder: 'Usuario' },
-    { nombre: 'password', label: 'Contraseña', placeholder: 'Contraseña' }
+    { nombre: 'password', label: 'Contraseña', placeholder: 'Contraseña' },
+    { nombre: 'tipo_usuario', label: 'Tipo de Usuario', placeholder: 'administrador' }
   ],
   menu: [
     { nombre: 'menuName', label: 'Nombre del menú', placeholder: 'Nombre' }
@@ -138,7 +134,7 @@ const camposPorTabla = {
   order: [
     { nombre: 'status', label: 'Estado', placeholder: 'Estado' },
     { nombre: 'total', label: 'Total', placeholder: 'Total' },
-    { nombre: 'order_date', label: 'Fecha (YYYY-MM-DD)', placeholder: 'Fecha' }
+    { nombre: 'order_date', label: 'Fecha', placeholder: 'YYYY-MM-DD' }
   ],
   orderdetail: [
     { nombre: 'orderID', label: 'Order ID', placeholder: 'orderID' },
@@ -146,7 +142,7 @@ const camposPorTabla = {
     { nombre: 'quantity', label: 'Cantidad', placeholder: 'Cantidad' }
   ],
   reports: [
-    { nombre: 'report_date', label: 'Fecha (YYYY-MM-DD)', placeholder: 'Fecha' },
+    { nombre: 'report_date', label: 'Fecha', placeholder: 'YYYY-MM-DD' },
     { nombre: 'report_data', label: 'Datos', placeholder: 'Datos del reporte' },
     { nombre: 'adminid', label: 'Admin ID', placeholder: 'adminid' }
   ],
@@ -157,13 +153,12 @@ const camposPorTabla = {
     { nombre: 'username', label: 'Usuario', placeholder: 'Usuario' },
     { nombre: 'password', label: 'Contraseña', placeholder: 'Contraseña' },
     { nombre: 'status', label: 'Estado', placeholder: 'Online/Offline' },
-    { nombre: 'role', label: 'Rol', placeholder: 'chef/Mesero' }
+    { nombre: 'role', label: 'Rol', placeholder: 'chef/Mesero' },
+    { nombre: 'tipo_usuario', label: 'Tipo de Usuario', placeholder: 'empleado' }
   ]
 }
 
-const camposFormulario = computed(() => {
-  return camposPorTabla[tabla.value] || []
-})
+const camposFormulario = computed(() => camposPorTabla[tabla.value] || [])
 
 const resetForm = () => {
   formData.value = {}
@@ -173,6 +168,11 @@ const resetForm = () => {
 }
 
 const realizarAccion = async () => {
+  if (accion.value === 'seleccionar' || tabla.value === 'seleccionar') {
+    respuesta.value = 'Debe seleccionar una acción y una tabla válida.'
+    return
+  }
+
   let url = `http://localhost:3000/${tabla.value}`
   const options = {}
 
@@ -198,6 +198,7 @@ const realizarAccion = async () => {
     }
 
     if (accion.value === 'agregar') {
+      setTipoUsuarioDefault()
       options.method = 'POST'
       options.headers = { 'Content-Type': 'application/json' }
       options.body = JSON.stringify(formData.value)
@@ -208,11 +209,13 @@ const realizarAccion = async () => {
         respuesta.value = 'Debes ingresar el ID a modificar.'
         return
       }
-      url += `/${formData.value.id}`
-      const { id: idField, ...datosModificados } = formData.value
+      const idMod = formData.value.id
+      const { id: idField, ...resto } = formData.value
+      setTipoUsuarioDefault(resto)
+      url += `/${idMod}`
       options.method = 'PUT'
       options.headers = { 'Content-Type': 'application/json' }
-      options.body = JSON.stringify(datosModificados)
+      options.body = JSON.stringify(resto)
     }
 
     const res = await fetch(url, options)
@@ -226,12 +229,18 @@ const realizarAccion = async () => {
   }
 }
 
+const setTipoUsuarioDefault = (obj = formData.value) => {
+  if (tabla.value === 'admin' && !obj.tipo_usuario) obj.tipo_usuario = 'administrador'
+  if (tabla.value === 'staff' && !obj.tipo_usuario) obj.tipo_usuario = 'empleado'
+}
+
 const cerrarSesion = () => {
   router.push('/login')
 }
 
-const paginaActual = ref(1)
-const itemsPorPagina = 5
+const toggleRespuesta = () => {
+  mostrarRespuesta.value = !mostrarRespuesta.value
+}
 
 const respuestaPaginada = computed(() => {
   if (Array.isArray(respuesta.value)) {
