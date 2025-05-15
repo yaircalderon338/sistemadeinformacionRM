@@ -2,6 +2,7 @@
   <div class="api-tester">
     <h1>Sistema de Información Arte culinario</h1>
 
+    <!-- Selección de acción -->
     <div class="form-group">
       <label>Acción:</label>
       <select v-model="accion" @change="resetForm">
@@ -13,6 +14,7 @@
       </select>
     </div>
 
+    <!-- Selección de tabla -->
     <div class="form-group">
       <label>Tabla:</label>
       <select v-model="tabla" @change="resetForm">
@@ -28,6 +30,7 @@
       </select>
     </div>
 
+    <!-- Consulta por ID o Todos -->
     <div class="form-group" v-if="accion !== 'agregar'">
       <label>Consulta por:</label>
       <select v-model="modoConsulta">
@@ -37,11 +40,13 @@
       </select>
     </div>
 
+    <!-- Ingreso de ID -->
     <div class="form-group" v-if="modoConsulta === 'id' && accion !== 'agregar'">
       <label>ID:</label>
       <input v-model="id" placeholder="Ingrese ID" />
     </div>
 
+    <!-- Formulario dinámico -->
     <div v-if="accion === 'agregar' || accion === 'modificar'" class="form-dinamico">
       <h3>Datos:</h3>
       <div v-if="accion === 'modificar'" class="form-group">
@@ -58,12 +63,14 @@
       </div>
     </div>
 
+    <!-- Botones -->
     <button @click="realizarAccion">Enviar</button>
     <button class="cerrar-sesion-btn" @click="cerrarSesion">Cerrar Sesión</button>
     <button class="toggle-respuesta-btn" @click="toggleRespuesta">
       {{ mostrarRespuesta ? 'Ocultar' : 'Mostrar' }} Respuesta
     </button>
 
+    <!-- Respuesta -->
     <div v-if="mostrarRespuesta" class="respuesta">
       <h2>Respuesta:</h2>
       <div v-if="Array.isArray(respuesta)">
@@ -87,6 +94,7 @@
           <button @click="paginaSiguiente" :disabled="paginaActual === totalPaginas">Siguiente →</button>
         </div>
       </div>
+
       <div v-else-if="typeof respuesta === 'object' && respuesta !== null">
         <ul>
           <li v-for="(valor, key) in respuesta" :key="key">
@@ -94,6 +102,7 @@
           </li>
         </ul>
       </div>
+
       <div v-else>
         <p>{{ respuesta }}</p>
       </div>
@@ -107,9 +116,10 @@ import { useRouter } from 'vue-router'
 import '../assets/tester.css'
 
 const router = useRouter()
-const accion = ref('visualizar')
-const tabla = ref('admin')
-const modoConsulta = ref('todos')
+
+const accion = ref('seleccionar')
+const tabla = ref('seleccionar')
+const modoConsulta = ref('seleccionar')
 const id = ref('')
 const respuesta = ref('')
 const formData = ref({})
@@ -223,7 +233,6 @@ const realizarAccion = async () => {
     const data = await res.json()
     respuesta.value = data
     paginaActual.value = 1
-
   } catch (err) {
     respuesta.value = `Error: ${err.message}`
   }
@@ -264,4 +273,39 @@ const paginaSiguiente = () => {
 const paginaAnterior = () => {
   if (paginaActual.value > 1) paginaActual.value--
 }
+import { onMounted, onBeforeUnmount } from 'vue'
+import { nextTick } from 'vue'
+
+const aplicarEscaladoInverso = () => {
+  const apiTester = document.querySelector('.api-tester')
+  if (!apiTester) return
+
+  // Detectar zoom actual con devicePixelRatio
+  const zoom = window.devicePixelRatio || 1
+  // Escalado inverso al zoom
+  const escala = 0.85 / zoom
+
+  apiTester.style.transformOrigin = 'center center'
+  apiTester.style.transform = `scale(${escala})`
+}
+
+const manejarEventosZoom = () => {
+  aplicarEscaladoInverso()
+}
+
+// Ejecutar al montar
+onMounted(() => {
+  aplicarEscaladoInverso()
+  window.addEventListener('resize', manejarEventosZoom)
+  window.addEventListener('zoom', manejarEventosZoom) // No estándar pero por si acaso
+  window.addEventListener('scroll', manejarEventosZoom) // En algunos navegadores cambia el zoom al scroll + ctrl
+})
+
+// Limpiar al desmontar
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', manejarEventosZoom)
+  window.removeEventListener('zoom', manejarEventosZoom)
+  window.removeEventListener('scroll', manejarEventosZoom)
+})
+
 </script>
