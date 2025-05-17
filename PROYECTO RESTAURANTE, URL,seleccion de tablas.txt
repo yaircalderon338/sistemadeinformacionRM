@@ -102,7 +102,7 @@ inicializar en una terminal en visual, en veu podemos interactuar con la interfa
 npm run dev
 
 
-DEPENDENCIAS 
+DEPENDENCIAS previamente, una por una 
 
 npm init -y
 npm install express
@@ -118,7 +118,7 @@ npm init -y
 npm install express pg dotenv cors
 npm install --save-dev nodemon
 
-DEPENDENCIAS 
+DEPENDENCIAS que se instalaron pero la version optimizada 
 
 npm init -y
 npm install express cors body-parser pg axios
@@ -131,3 +131,17 @@ npm install -g nodemon
 npm install --save-dev nodemon
 npm install --save-dev concurrently para levantar los dos servicios en paralelo
 
+el proyecto se inicializa con el comando 
+
+npm start: este comando me permite levantar los dos servicios de manera paralela 
+
+dentro de la carpeta raiz del proyecto vamos a encontar la carpeta backend y dentro de ella 
+el archivo db.js que es la conexion a la base de datos, el earchivo server.js que nos permite 
+realizar el llamado a las apis.
+
+dentro de la carpeta backend encontraremos la carpeta routes y en la cual encontraremos los archivos que contienen 
+las 8 apis.
+
+dentro de la carpeta frontend encontraremos la carpeta src encontraremos las carpetas assets y en ella los css 
+del login y de nuestro front, en esa misma carpeta src encontraremos la carpeta components y en ella tendremos los archivos 
+necesarios para que funcionen nuestro front.
